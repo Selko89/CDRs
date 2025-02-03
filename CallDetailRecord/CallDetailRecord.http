@@ -1,0 +1,6 @@
+@CallDetailRecord_HostAddress = http://localhost:5139
+
+GET {{CallDetailRecord_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,9 @@
+nav a {
+  margin-right: 1rem;
+  text-decoration: none;
+}
+
+nav a.active {
+  font-weight: bold;
+  text-decoration: underline;
+}

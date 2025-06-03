@@ -1,0 +1,8 @@
+<form (submit)="onLogin(); $event.preventDefault()">
+  <input type="email" [(ngModel)]="email" name="email" placeholder="E-post" required>
+  <input type="password" [(ngModel)]="password" name="password" placeholder="Passord" required>
+  <button type="submit">Logg inn</button>
+   @if (error) {
+    <div style="color:red">{{ error }}</div>
+  }
+</form>

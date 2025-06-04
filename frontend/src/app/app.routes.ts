@@ -1,8 +1,16 @@
 import { Routes } from '@angular/router';
+import { Layout } from './layout/layout';
+import { Home } from './pages/home/home';
 import { Login } from './pages/login/login';
-import { Home } from './pages/home/home';  // create this component
 
 export const routes: Routes = [
-  { path: '', component: Home },         // Root path
-  { path: 'login', component: Login },
+  {
+    path: '',
+    component: Layout,
+    children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'home', component: Home },
+      { path: 'login', component: Login },
+    ]
+  }
 ];

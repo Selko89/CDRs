@@ -1,0 +1,79 @@
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+*.log
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vscode/
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Rider IDE
+.idea/
+
+# VS Code directory
+.vscode/
+
+# Visual Studio working folder
+.vs/
+
+# Packages folder (used in legacy .NET projects)
+packages/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Dotnet CLI
+**/project.lock.json
+**/project.fragment.lock.json
+
+# Build results of dotnet pack
+*.symbols.nupkg
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Others
+*.dbmdl
+*.bak
+*.sql
+*.pdb
+*.cache
+*.orig
+
+# Azure functions local settings file
+local.settings.json
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# Coverlet coverage
+coverage*.json
+coverage*.xml
+coverage*.info

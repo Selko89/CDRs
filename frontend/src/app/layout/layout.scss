@@ -1,0 +1,33 @@
+/* src/app/layout/layout.scss */
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 200px;
+  background: #f3f3f3;
+}
+
+.menu-button {
+  margin-right: 1rem;
+}
+
+.content {
+  padding: 1rem;
+  background: #f9f9f9;
+  min-height: calc(100vh - 64px - 50px);
+}
+
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background: #eee;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Sett lilla farge hvis du ikke bruker prebuilt theme */
+.mat-toolbar.mat-primary {
+  background: #7e57c2 !important; // lilla
+  color: white;
+}

@@ -1,0 +1,26 @@
+<!-- src/app/layout/layout.html -->
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer mode="side" class="sidenav" fixedInViewport>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home"><mat-icon>home</mat-icon> Hjem</a>
+      <a mat-list-item routerLink="/login"><mat-icon>login</mat-icon> Logg inn</a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Car Auction</span>
+    </mat-toolbar>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+
+    <footer class="footer">
+      © 2025 Car Auction – Alle rettigheter forbeholdt
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

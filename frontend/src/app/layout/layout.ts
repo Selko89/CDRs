@@ -30,9 +30,14 @@ export class Layout {
   auth = inject(AuthService);
   private router = inject(Router);
 
+  constructor() {
+    this.auth.isLoggedIn$.subscribe(isLoggedIn => {
+      console.log('Layout: isLoggedIn$', isLoggedIn);
+    });
+  }
+
   logout() {
     this.auth.logout();
     this.router.navigate(['/home']);
   }
 }
-

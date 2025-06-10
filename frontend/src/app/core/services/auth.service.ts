@@ -1,28 +1,44 @@
+// src/app/core/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = 'https://localhost:7097/api/auth';
   private _email: string | null = null;
+  private isLoggedInSubject = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log('AuthService init, isLoggedIn:', this.isLoggedInSubject.value);
+  }
 
-  login(email: string, password: string) {
+  login(email: string, password: string): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
-      .pipe(tap(res => {
-        console.log('Res:' + res);
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('email', email);
-        this._email = email;
-      }));
+      .pipe(
+        tap(res => {
+          console.log('Login response:', res);
+          if (res && res.token) {
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('email', email);
+            this._email = email;
+            this.isLoggedInSubject.next(true);
+            console.log('After login, isLoggedIn:', this.isLoggedInSubject.value);
+          } else {
+            console.error('No token in response');
+          }
+        })
+      );
   }
 
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('email');
     this._email = null;
+    this.isLoggedInSubject.next(false);
+    console.log('After logout, isLoggedIn:', this.isLoggedInSubject.value);
   }
 
   get token(): string | null {
@@ -30,7 +46,6 @@ export class AuthService {
   }
 
   get isLoggedIn(): boolean {
-    console.log('isLoggedIn: ' + this.token);
     return !!this.token;
   }
 

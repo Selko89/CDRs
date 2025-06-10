@@ -1,28 +1,31 @@
 <div class="login-container">
-  <h2>Login</h2>
-
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" type="email" />
-      <mat-error *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched">
-        Vennligst skriv inn en gyldig e-post
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Password</mat-label>
-      <input matInput formControlName="password" type="password" />
-      <mat-error *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched">
-        Passord kreves
-      </mat-error>
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
-      Logg inn
-    </button>
-  </form>
-
-  <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Logg inn</mat-card-title>
+      <mat-card-subtitle>Car Auction</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="login()" class="login-form">
+        <mat-form-field appearance="outline">
+          <mat-label>E-post</mat-label>
+          <input matInput [(ngModel)]="email" name="email" type="email" required>
+          <mat-error *ngIf="email === ''">E-post er påkrevd</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Passord</mat-label>
+          <input matInput [(ngModel)]="password" name="password" type="password" required>
+          <mat-error *ngIf="password === ''">Passord er påkrevd</mat-error>
+        </mat-form-field>
+        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+          <span *ngIf="!isLoading">Logg inn</span>
+        </button>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <a mat-button routerLink="/home">Tilbake til hjem</a>
+    </mat-card-actions>
+  </mat-card>
 </div>
 

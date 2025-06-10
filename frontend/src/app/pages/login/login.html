@@ -1,8 +1,28 @@
-<form (submit)="onLogin(); $event.preventDefault()">
-  <input type="email" [(ngModel)]="email" name="email" placeholder="E-post" required>
-  <input type="password" [(ngModel)]="password" name="password" placeholder="Passord" required>
-  <button type="submit">Logg inn</button>
-   @if (error) {
-    <div style="color:red">{{ error }}</div>
-  }
-</form>
+<div class="login-container">
+  <h2>Login</h2>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" />
+      <mat-error *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched">
+        Vennligst skriv inn en gyldig e-post
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" />
+      <mat-error *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched">
+        Passord kreves
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+      Logg inn
+    </button>
+  </form>
+
+  <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>
+

@@ -1,5 +1,5 @@
 // src/app/layout/layout.ts
-import { Component } from '@angular/core';
+import { inject, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -8,6 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -25,5 +26,9 @@ import { NgIf } from '@angular/common';
   templateUrl: './layout.html',
   styleUrls: ['./layout.scss']
 })
-export class Layout {}
+export class Layout {
+  auth = inject(AuthService);
+
+  
+}
 

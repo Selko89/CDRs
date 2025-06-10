@@ -1,3 +1,4 @@
+/* src/app/layout/layout.scss */
 .sidenav-container {
   height: 100vh;
 }
@@ -27,7 +28,35 @@
 
 /* Sett lilla farge hvis du ikke bruker prebuilt theme */
 .mat-toolbar.mat-primary {
-  background: #7e57c2 !important; // lilla
+  background: #7e57c2 !important; /* Lilla */
   color: white;
 }
 
+/* Ny styling for user-menu */
+.spacer {
+  flex: 1 1 auto; /* Skyver user-menu til høyre */
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Avstand mellom ikon og knapper */
+}
+
+.user-menu mat-icon-button {
+  color: white; /* Hvit ikonfarge for å matche toolbar */
+}
+
+.user-menu mat-icon-button:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Subtil hover-effekt */
+}
+
+.user-menu button[mat-button] {
+  color: white; /* Hvit tekst */
+  background-color: transparent; /* Gjennomsiktig bakgrunn */
+  transition: background-color 0.3s;
+}
+
+.user-menu button[mat-button]:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Lysere hover-effekt */
+}

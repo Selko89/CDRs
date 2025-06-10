@@ -1,0 +1,19 @@
+/* src/app/features/my-page/my-page.component.scss */
+.my-page-card {
+  max-width: 600px;
+  margin: 2rem auto; /* Sentrert med margin */
+  padding: 1rem;
+}
+
+mat-card-title {
+  color: #7e57c2; /* Matcher din lilla tema */
+}
+
+mat-card-subtitle {
+  color: #666;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+}

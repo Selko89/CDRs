@@ -30,6 +30,7 @@ export class AuthService {
   }
 
   get isLoggedIn(): boolean {
+    console.log('isLoggedIn: ' + this.token);
     return !!this.token;
   }
 

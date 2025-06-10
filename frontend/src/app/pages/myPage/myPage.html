@@ -1,0 +1,13 @@
+<mat-card class="my-page-card">
+  <mat-card-header>
+    <mat-card-title>Min side</mat-card-title>
+    <mat-card-subtitle>Velkommen, {{ auth.userEmail || 'Bruker' }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>Dette er din personlige side. Her kan du se og administrere dine data.</p>
+    <!-- Legg til mer innhold senere, f.eks. brukerprofil, auksjoner osv. -->
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button routerLink="/home">Tilbake til hjem</button>
+  </mat-card-actions>
+</mat-card>

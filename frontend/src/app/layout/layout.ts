@@ -1,4 +1,4 @@
-// src/app/layout/layout.ts
+// src/app/layout/layout.component.ts
 import { inject, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -6,7 +6,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../core/services/auth.service';
 
@@ -28,7 +28,11 @@ import { AuthService } from '../core/services/auth.service';
 })
 export class Layout {
   auth = inject(AuthService);
+  private router = inject(Router);
 
-  
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/home']);
+  }
 }
 

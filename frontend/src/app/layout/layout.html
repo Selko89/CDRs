@@ -5,6 +5,7 @@
       <a mat-list-item routerLink="/home"><mat-icon>home</mat-icon> Hjem</a>
       <a mat-list-item routerLink="/login" *ngIf="!auth.isLoggedIn"><mat-icon>login</mat-icon> Logg inn</a>
       <a mat-list-item routerLink="/my-page" *ngIf="auth.isLoggedIn"><mat-icon>person</mat-icon> Min side</a>
+      <a mat-list-item routerLink="/organizations" *ngIf="auth.isLoggedIn"><mat-icon>business</mat-icon>Organisasjoner</a>
     </mat-nav-list>
   </mat-sidenav>
 

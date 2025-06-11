@@ -1,6 +1,7 @@
 ﻿using CallDetailRecord.Data;
 using CallDetailRecord.Models;
 using CallDetailRecord.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace CallDetailRecord.Controllers
         }
 
         [HttpGet]
+        //[Authorize(Roles = "SuperAdmin,Admin,SuperUser,User")]
         public async Task<ActionResult<List<Organization>>> GetAllOrganizations()
         {
             var organizations = await _context.Organizations.ToListAsync();
@@ -26,6 +28,7 @@ namespace CallDetailRecord.Controllers
         }
 
         [HttpGet("{id}")]
+        //[Authorize(Roles = "SuperAdmin,Admin,SuperUser,User")]
         public async Task<ActionResult<Organization>> GetOrganization(int id)
         {
             var organization = await _context.Organizations.FindAsync(id);
@@ -37,6 +40,7 @@ namespace CallDetailRecord.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult<Organization>> CreateOrganization(Organization organization)
         {
             if (_context.Organizations.Any(o => o.Email == organization.Email))
@@ -51,12 +55,18 @@ namespace CallDetailRecord.Controllers
         }
 
         [HttpPut]
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult<Organization>> UpdateOrganization(Organization organization)
         {
             var dbOrg = await _context.Organizations.FindAsync(organization.OrganizationId);
             if (dbOrg is null)
             {
                 return NotFound("Organization not found!");
+            }
+
+            if (_context.Organizations.Any(o => o.Email == organization.Email && o.OrganizationId != organization.OrganizationId))
+            {
+                return BadRequest("Email is already in use.");
             }
 
             dbOrg.PhoneNumber = organization.PhoneNumber;
@@ -70,7 +80,8 @@ namespace CallDetailRecord.Controllers
             return Ok(organization);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> DeleteOrganization(int id)
         {
             var dbOrg = await _context.Organizations.FindAsync(id);

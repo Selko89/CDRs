@@ -1,0 +1,61 @@
+.organization-container {
+  padding: 1rem; // Matches .content padding in layout.scss
+  background: #f9f9f9; // Matches .content background
+  min-height: calc(100vh - 64px - 50px); // Matches .content min-height
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #7e57c2; // Purple from layout.scss
+  }
+
+  .create-button {
+    margin-bottom: 1rem; // Matches button spacing
+    background: #7e57c2; // Purple
+    color: white;
+
+    &:hover {
+      background: #6d40a8; // Darker purple for hover
+    }
+  }
+
+  table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: collapse;
+
+    th.mat-header-cell {
+      background: #7e57c2; // Purple
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+    }
+
+    td.mat-cell {
+      padding: 0.75rem;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    tr.mat-row:hover {
+      background: rgba(126, 87, 194, 0.04); // Light purple tint
+    }
+
+    .mat-elevation-z8 {
+      box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12); // Enhanced from original
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .mat-icon-button {
+      margin-right: 0.5rem; // Matches layout.scss spacing
+      color: #7e57c2;
+
+      &:hover {
+        color: #6d40a8; // Darker purple
+        background: rgba(255, 255, 255, 0.1); // Matches user-menu hover
+      }
+    }
+  }
+}

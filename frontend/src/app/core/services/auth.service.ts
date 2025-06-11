@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -51,6 +52,36 @@ export class AuthService {
 
   get userEmail(): string | null {
     return this._email ?? localStorage.getItem('email');
+  }
+  getUserRoles(): string[] {
+    const token = this.token;
+    if (!token) return [];
+    try {
+      const decoded = jwtDecode<{ role: string | string[] }>(token);
+      return Array.isArray(decoded.role) ? decoded.role : decoded.role ? [decoded.role] : [];
+    } catch {
+      return [];
+    }
+  }
+
+  hasAnyRole(roles: string[]): boolean {
+    const userRoles = this.getUserRoles();
+    return userRoles.some(role => roles.includes(role));
+  }
+
+  getUserInfo(): { email: string; firstName: string; lastName: string } | null {
+    const token = this.token;
+    if (!token) return null;
+    try {
+      const decoded = jwtDecode<{ email: string; firstName: string; lastName: string }>(token);
+      return {
+        email: decoded.email,
+        firstName: decoded.firstName,
+        lastName: decoded.lastName
+      };
+    } catch {
+      return null;
+    }
   }
 }
 

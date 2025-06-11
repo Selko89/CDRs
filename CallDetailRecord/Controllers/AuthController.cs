@@ -38,6 +38,13 @@ public class AuthController : ControllerBase
             return BadRequest(result.Errors);
         }
 
+        // Assign default User Role
+        var roleResult = await _userManager.AddToRoleAsync(user, "User");
+        if (!roleResult.Succeeded)
+        {
+            return BadRequest(roleResult.Errors);
+        }
+
         return Ok();
     }
 
@@ -55,19 +62,26 @@ public class AuthController : ControllerBase
         return Ok(new { token });
     }
 
-    private string GenerateJwtToken( User user)
+    private async Task<string> GenerateJwtToken( User user)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
         var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]));
 
-        var claims = new[]
+        // Get user roles
+        var roles = await _userManager.GetRolesAsync(user);
+
+        // Create claims with roles
+        var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim("firstName", user.FirstName),
-            new Claim("lastName", user.LastName),
+            new Claim("firstName", user.FirstName ?? string.Empty),
+            new Claim("lastName", user.LastName ?? string.Empty),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+
+        // Add roles as claims
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

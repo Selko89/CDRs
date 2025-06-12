@@ -28,7 +28,12 @@ public class AuthController : ControllerBase
             Email = model.Email,
             FirstName = model.FirstName,
             LastName = model.LastName,
-            PhoneNumber = model.PhoneNumber
+            PhoneNumber = model.PhoneNumber,
+            Address = model.Address,
+            PostCode = model.PostCode,
+            City = model.City,
+            Country = model.Country,
+            DateOfBirth = model.DateOfBirth
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -39,13 +44,15 @@ public class AuthController : ControllerBase
         }
 
         // Assign default User Role
+        var role = string.IsNullOrEmpty(model.Role) ? "User" : model.Role;
         var roleResult = await _userManager.AddToRoleAsync(user, "User");
         if (!roleResult.Succeeded)
         {
             return BadRequest(roleResult.Errors);
         }
 
-        return Ok();
+        var token = await GenerateJwtToken(user);
+        return Ok(new { token });
     }
 
     [HttpPost("login")]
@@ -54,12 +61,12 @@ public class AuthController : ControllerBase
         var user = await _userManager.FindByEmailAsync(model.Email);
         if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
         {
-            return Unauthorized();
+            return Unauthorized("Invalid email or password.");
         }
 
         var token = GenerateJwtToken(user);
 
-        return Ok(new { token });
+        return Ok(new { token?.Result });
     }
 
     private async Task<string> GenerateJwtToken( User user)
@@ -73,11 +80,17 @@ public class AuthController : ControllerBase
         // Create claims with roles
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim("firstName", user.FirstName ?? string.Empty),
-            new Claim("lastName", user.LastName ?? string.Empty),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("firstName", user.FirstName ?? string.Empty),
+                new Claim("lastName", user.LastName ?? string.Empty),
+                new Claim("phoneNumber", user.PhoneNumber ?? string.Empty),
+                new Claim("address", user.Address ?? string.Empty),
+                new Claim("postCode", user.PostCode ?? string.Empty),
+                new Claim("city", user.City ?? string.Empty),
+                new Claim("country", user.Country ?? string.Empty),
+                new Claim("dateOfBirth", user.DateOfBirth.ToString("yyyy-MM-dd") ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         // Add roles as claims

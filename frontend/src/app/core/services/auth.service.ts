@@ -9,29 +9,28 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private apiUrl = 'https://localhost:7097/api/auth';
   private _email: string | null = null;
-  private isLoggedInSubject = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
+  private isLoggedInSubject = new BehaviorSubject<boolean>(!!this.token);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    console.log('AuthService init, isLoggedIn:', this.isLoggedInSubject.value);
+    console.log('AuthService initialized. Logged in:', this.isLoggedInSubject.value);
   }
 
-  login(email: string, password: string): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
-      .pipe(
-        tap(res => {
-          console.log('Login response:', res);
-          if (res && res.token) {
-            localStorage.setItem('token', res.token);
-            localStorage.setItem('email', email);
-            this._email = email;
-            this.isLoggedInSubject.next(true);
-            console.log('After login, isLoggedIn:', this.isLoggedInSubject.value);
-          } else {
-            console.error('No token in response');
-          }
-        })
-      );
+  login(email: string, password: string): Observable<{ result: string }> {
+    return this.http.post<{ result: string }>(`${this.apiUrl}/login`, { email, password }).pipe(
+      tap(res => {
+        const token = res.result;
+        if (token) {
+          localStorage.setItem('token', token);
+          localStorage.setItem('email', email);
+          this._email = email;
+          this.isLoggedInSubject.next(true);
+          console.log('Login successful. Token stored.');
+        } else {
+          console.error('Login failed: No token received.');
+        }
+      })
+    );
   }
 
   logout() {
@@ -39,7 +38,7 @@ export class AuthService {
     localStorage.removeItem('email');
     this._email = null;
     this.isLoggedInSubject.next(false);
-    console.log('After logout, isLoggedIn:', this.isLoggedInSubject.value);
+    console.log('User logged out.');
   }
 
   get token(): string | null {
@@ -47,19 +46,33 @@ export class AuthService {
   }
 
   get isLoggedIn(): boolean {
-    return !!this.token;
+    const token = this.token;
+    return !!token && !this.isTokenExpired(token);
   }
 
   get userEmail(): string | null {
     return this._email ?? localStorage.getItem('email');
   }
+
+  isTokenExpired(token: string): boolean {
+    try {
+      const { exp } = jwtDecode<{ exp: number }>(token);
+      return Date.now() >= exp * 1000;
+    } catch (error) {
+      console.error('Invalid token for expiration check:', error);
+      return true;
+    }
+  }
+
   getUserRoles(): string[] {
     const token = this.token;
-    if (!token) return [];
+    if (!token || this.isTokenExpired(token)) return [];
     try {
-      const decoded = jwtDecode<{ role: string | string[] }>(token);
-      return Array.isArray(decoded.role) ? decoded.role : decoded.role ? [decoded.role] : [];
-    } catch {
+      const decoded = jwtDecode<any>(token);
+      const roleClaim = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      return Array.isArray(roleClaim) ? roleClaim : roleClaim ? [roleClaim] : [];
+    } catch (error) {
+      console.error('Failed to decode token for roles:', error);
       return [];
     }
   }
@@ -69,20 +82,47 @@ export class AuthService {
     return userRoles.some(role => roles.includes(role));
   }
 
-  getUserInfo(): { email: string; firstName: string; lastName: string } | null {
+  getUserInfo(): {
+    email: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    address: string;
+    postCode: string;
+    city: string;
+    country: string;
+    dateOfBirth: string;
+  } | null {
     const token = this.token;
-    if (!token) return null;
+    if (!token || this.isTokenExpired(token)) return null;
+
     try {
-      const decoded = jwtDecode<{ email: string; firstName: string; lastName: string }>(token);
+      const decoded = jwtDecode<{
+        email: string;
+        firstName: string;
+        lastName: string;
+        phoneNumber: string;
+        address: string;
+        postCode: string;
+        city: string;
+        country: string;
+        dateOfBirth: string;
+      }>(token);
+
       return {
         email: decoded.email,
         firstName: decoded.firstName,
-        lastName: decoded.lastName
+        lastName: decoded.lastName,
+        phoneNumber: decoded.phoneNumber,
+        address: decoded.address,
+        postCode: decoded.postCode,
+        city: decoded.city,
+        country: decoded.country,
+        dateOfBirth: decoded.dateOfBirth
       };
-    } catch {
+    } catch (error) {
+      console.error('Failed to decode token for user info:', error);
       return null;
     }
   }
 }
-
-

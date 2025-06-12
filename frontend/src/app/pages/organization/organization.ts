@@ -11,6 +11,7 @@ import { OrganizationService, Organization } from '../../core/services/organizat
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-organization',
@@ -24,6 +25,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
     MatIconModule,
     FormsModule,
     HttpClientModule,
+    NgIf
   ],
   template: `
     <div class="organization-container">
@@ -80,6 +82,10 @@ export class OrganizationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('Sjekk her');
+    console.log(this.authService.getUserRoles());
+    console.log(this.authService.isLoggedIn);
+    console.log(this.authService.hasAnyRole(['SuperAdmin']));
     this.loadOrganizations();
   }
 
